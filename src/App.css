@@ -1,5 +1,6 @@
+
 body {
-  background: #eeeff4;
+  background: linear-gradient(62.81deg, #92C367 -5.35%, #D1F36C 100%);
 }
 
 .App {
@@ -11,14 +12,17 @@ body {
 
 .filter-container {
   display: flex;
-  justify-content: space-between;
-  background: #fff;
-  border-radius: 4px;
-  padding: 32px;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 32px 0 48px 0;
+  margin-bottom: 32px;
+  border-top: 1px solid #92C367;
+  border-bottom: 1px solid #92C367;
 }
 
 .input-container {
-  width: 40%;
+  width: 270px;
+  margin-right: 32px;
 }
 
 .age-input {
@@ -37,13 +41,90 @@ body {
 }
 
 header {
-  font-size: 24px;
   margin-bottom: 32px;
   margin-top: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header_title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #527532;
+  font-family: 'Exo', sans-serif;
+  text-transform: uppercase;
+}
+
+.header_local-button {
+  background: #92C367;
+  border-radius: 4px;
+  width: 100px;
+  height: 40px;
 }
 
 .input-label {
   padding-bottom: 8px;
+}
+
+.life-block {
+  color: #6E2775;
+}
+
+.life-block_wrapper {
+  display: flex;
+}
+
+.life-block_icon {
+  width: 40px;
+}
+
+.life-block_amount {
+  display: flex;
+  font-size: 18px;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #92C367;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.cards {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card {
+  background: #CDFFA1;
+  padding: 24px;
+  display: inline-flex;
+  border-radius: 8px;
+}
+
+.card_icon {
+  height: 40px;
+  margin-right: 32px;
+}
+
+.card_icon .logo-svg path {
+  fill:#6E2775;
+}
+
+.card_amount {
+  height: 40px;
+  min-width: 40px;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #B967C2;
+  border-radius: 8px;
+}
+
+.card_amount--green {
+  border: 3px solid #527532;
 }
 
 @media (max-width: 567px) {

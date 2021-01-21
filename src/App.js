@@ -2,26 +2,14 @@ import React, { useState } from "react";
 import Select from "react-select";
 import "./App.css";
 import countries from "./final.json";
-
-console.log(countries);
+import { BOVIE_MEAT, PIG_MEAT, POULTRY_MEAT } from "./constants.js";
+import manIcon from "./imgs/man.svg";
+import cowIcon from "./imgs/cow.svg";
+import pigIcon from "./imgs/pig.svg";
+import chickenIcon from "./imgs/chicken.svg";
 
 function round(value, decimals) {
-  return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-}
-
-const BOVIE_MEAT = {
-  usefulMass: 0.62,
-  averageMass: 550
-}
-
-const PIG_MEAT = {
-  usefulMass: 0.7,
-  averageMass: 130
-}
-
-const POULTRY_MEAT = {
-  usefulMass: 0.71,
-  averageMass: 2.6
+  return Number(Math.round(value + "e" + decimals) + "e-" + decimals);
 }
 
 const options = countries.map((country) => ({
@@ -30,33 +18,106 @@ const options = countries.map((country) => ({
   value: country.country,
 }));
 
+
+const LifeExpentancy = ({ restAge }) => <div className="life-block">
+  <label>
+    <div className="input-label">Rest of life</div>
+    <div className="life-block_wrapper">
+      <img src={manIcon} className="life-block_icon" />
+      {restAge ? <div className="life-block_amount">{restAge}</div> : null}
+    </div>
+  </label>
+</div>;
+
+const Card = ({isEaten, icon, amount}) => {
+  return <div className="card">
+    <img src={icon} className="card_icon" />
+    <div className={`card_amount ${ !isEaten ? 'card_amount--green' : null }`}>{amount}</div>
+  </div>
+}
+
 const App = () => {
   const [currentCountry, setCountry] = useState(null);
-  const [age, setAge] = useState(12);
+  const [age, setAge] = useState(null);
 
-  let restAge = 0;
-  let eatenBovine = 0;
-  let eatenPig = 0;
-  let eatenPoultry = 0;
-  let savedBovine = 0;
-  let savedPig = 0;
-  let savedPoultry = 0;
+  let restAge = 0,
+    eatenBovine = 0,
+    eatenPig = 0,
+    eatenPoultry = 0,
+    savedBovine = 0,
+    savedPig = 0,
+    savedPoultry = 0;
+
   if (currentCountry) {
     const { a, b, c } = currentCountry;
     restAge = round(a + (Math.sqrt((age - b) ** 2 + c) - age) / 2, 1);
-    
-    eatenBovine = round(currentCountry.bovineConsumption / BOVIE_MEAT.usefulMass / BOVIE_MEAT.averageMass * age, 1);
-    eatenPig = round(currentCountry.pigConsumption / PIG_MEAT.usefulMass / PIG_MEAT.averageMass * age, 1);
-    eatenPoultry = round(currentCountry.poultryConsumption / POULTRY_MEAT.usefulMass / POULTRY_MEAT.averageMass * age, 1);
 
-    savedBovine = round(currentCountry.bovineConsumption / BOVIE_MEAT.usefulMass / BOVIE_MEAT.averageMass * restAge, 1);
-    savedPig = round(currentCountry.pigConsumption / PIG_MEAT.usefulMass / PIG_MEAT.averageMass * restAge, 1);
-    savedPoultry = round(currentCountry.poultryConsumption / POULTRY_MEAT.usefulMass / POULTRY_MEAT.averageMass * restAge, 1);
+    eatenBovine = round(
+      (currentCountry.bovineConsumption /
+        BOVIE_MEAT.usefulMass /
+        BOVIE_MEAT.averageMass) *
+        age,
+      1
+    );
+    eatenPig = round(
+      (currentCountry.pigConsumption /
+        PIG_MEAT.usefulMass /
+        PIG_MEAT.averageMass) *
+        age,
+      1
+    );
+    eatenPoultry = round(
+      (currentCountry.poultryConsumption /
+        POULTRY_MEAT.usefulMass /
+        POULTRY_MEAT.averageMass) *
+        age,
+      1
+    );
+
+    savedBovine = round(
+      (currentCountry.bovineConsumption /
+        BOVIE_MEAT.usefulMass /
+        BOVIE_MEAT.averageMass) *
+        restAge,
+      1
+    );
+    savedPig = round(
+      (currentCountry.pigConsumption /
+        PIG_MEAT.usefulMass /
+        PIG_MEAT.averageMass) *
+        restAge,
+      1
+    );
+    savedPoultry = round(
+      (currentCountry.poultryConsumption /
+        POULTRY_MEAT.usefulMass /
+        POULTRY_MEAT.averageMass) *
+        restAge,
+      1
+    );
   }
+
+  let cards = [
+    { icon: cowIcon, eaten: eatenBovine, canBeSaved: savedBovine},
+    { icon: pigIcon, eaten: eatenPig, canBeSaved: savedPig},
+    { icon: chickenIcon, eaten: eatenPoultry, canBeSaved: savedPoultry},
+  ];
+
+  let selectStyles = {
+    control: (styles) => ({
+      ...styles,
+      // backgroundColor: 'black',
+      border: "3px solid #92C367",
+    }),
+  };
 
   return (
     <div className="App">
-      <header>Форма рассчёта съеденных зверушек</header>
+      <header>
+        <div className="header_title">Vegan calculator</div>
+        <div className="header_local-button"></div>
+      </header>
+
       <div className="filter-container">
         <div className="input-container country-input">
           <label>
@@ -65,6 +126,8 @@ const App = () => {
               defaultValue={currentCountry}
               onChange={setCountry}
               options={options}
+              styles={selectStyles}
+              placeholder={"Select your country"}
             />
           </label>
         </div>
@@ -76,23 +139,28 @@ const App = () => {
               value={age}
               onChange={(e) => setAge(e.target.value)}
               type="number"
+              placeholder="Enter your age"
             ></input>
           </label>
         </div>
+      <LifeExpentancy restAge={ restAge } />
       </div>
-      {restAge ? (
-        <div>Оставшееся число лет (Remaining Life expectancy): {restAge}</div>
-      ) : null}
 
-      <div>Уже съедено(alredy eaten):</div>
-      { eatenBovine ? <div>Коровы (Cows): { eatenBovine }</div> : null }
-      { eatenPig ? <div>Свиньи (Pigs): { eatenPig }</div> : null }
-      { eatenPoultry ? <div>Домашние птицы (Poultry): { eatenPoultry }</div> : null }
+      <div>
+        <div>Already</div>
+        <div className="cards"> 
+          {cards && cards.map(({icon, eaten}) => <Card icon={icon} isEaten amount={eaten} />)}
+        </div>
+      </div>
+      
+      <div>
+        <div>Can be Saved</div>
+        <div className="cards"> 
+          {cards && cards.map(({icon, canBeSaved}) => <Card icon={icon} amount={canBeSaved} />)}
+        </div>
+      </div>
 
-      <div>будут съедены \ могут быть спасены(will be eaten \ can be saved):</div>
-      { savedBovine ? <div>Коровы (Cows): { savedBovine }</div> : null }
-      { savedPig ? <div>Свиньи (Pigs): { savedPig }</div> : null }
-      { savedPoultry ? <div>Домашние птицы (Poultry): { savedPoultry }</div> : null }
+      
     </div>
   );
 };
