@@ -1,16 +1,24 @@
 import React, { useState } from "react";
+import Media from "react-media";
 import Select from "react-select";
 import "./App.css";
+import Card from './components/card';
+import LifeExpentancy from './components/life-expentancy';
+import LangPopup from './components/lang-popup';
+import { round } from './utils';
 import countries from "./final.json";
-import { BOVIE_MEAT, PIG_MEAT, POULTRY_MEAT } from "./constants.js";
-import manIcon from "./imgs/man.svg";
+import {
+  BOVIE_MEAT,
+  PIG_MEAT,
+  POULTRY_MEAT,
+  LOCALIZATION,
+} from "./constants.js";
 import cowIcon from "./imgs/cow.svg";
 import pigIcon from "./imgs/pig.svg";
 import chickenIcon from "./imgs/chicken.svg";
-
-function round(value, decimals) {
-  return Number(Math.round(value + "e" + decimals) + "e-" + decimals);
-}
+import redCowIcon from "./imgs/cow-red.svg";
+import redPigIcon from "./imgs/pig-red.svg";
+import redChickenIcon from "./imgs/chicken-red.svg";
 
 const options = countries.map((country) => ({
   ...country,
@@ -18,27 +26,22 @@ const options = countries.map((country) => ({
   value: country.country,
 }));
 
-
-const LifeExpentancy = ({ restAge }) => <div className="life-block">
-  <label>
-    <div className="input-label">Rest of life</div>
-    <div className="life-block_wrapper">
-      <img src={manIcon} className="life-block_icon" />
-      {restAge ? <div className="life-block_amount">{restAge}</div> : null}
-    </div>
-  </label>
-</div>;
-
-const Card = ({isEaten, icon, amount}) => {
-  return <div className="card">
-    <img src={icon} className="card_icon" />
-    <div className={`card_amount ${ !isEaten ? 'card_amount--green' : null }`}>{amount}</div>
-  </div>
+const calculateMeatValue = (country, consumptionType, meatConstant, age) => {
+  return round(
+    (country[consumptionType] /
+      meatConstant.usefulMass /
+      meatConstant.averageMass) *
+      age,
+    1
+  )
 }
 
 const App = () => {
   const [currentCountry, setCountry] = useState(null);
   const [age, setAge] = useState(null);
+  const [localization, setLocalization] = useState("EN");
+  const [isLangPopup, setLangPopup] = useState(false);
+  const [isAside, setAside] = useState(false);
 
   let restAge = 0,
     eatenBovine = 0,
@@ -52,116 +55,137 @@ const App = () => {
     const { a, b, c } = currentCountry;
     restAge = round(a + (Math.sqrt((age - b) ** 2 + c) - age) / 2, 1);
 
-    eatenBovine = round(
-      (currentCountry.bovineConsumption /
-        BOVIE_MEAT.usefulMass /
-        BOVIE_MEAT.averageMass) *
-        age,
-      1
-    );
-    eatenPig = round(
-      (currentCountry.pigConsumption /
-        PIG_MEAT.usefulMass /
-        PIG_MEAT.averageMass) *
-        age,
-      1
-    );
-    eatenPoultry = round(
-      (currentCountry.poultryConsumption /
-        POULTRY_MEAT.usefulMass /
-        POULTRY_MEAT.averageMass) *
-        age,
-      1
-    );
-
-    savedBovine = round(
-      (currentCountry.bovineConsumption /
-        BOVIE_MEAT.usefulMass /
-        BOVIE_MEAT.averageMass) *
-        restAge,
-      1
-    );
-    savedPig = round(
-      (currentCountry.pigConsumption /
-        PIG_MEAT.usefulMass /
-        PIG_MEAT.averageMass) *
-        restAge,
-      1
-    );
-    savedPoultry = round(
-      (currentCountry.poultryConsumption /
-        POULTRY_MEAT.usefulMass /
-        POULTRY_MEAT.averageMass) *
-        restAge,
-      1
-    );
+    eatenBovine = calculateMeatValue(currentCountry, 'bovineConsumption', BOVIE_MEAT, age);
+    eatenPig = calculateMeatValue(currentCountry, 'pigConsumption', PIG_MEAT, age);
+    eatenPoultry = calculateMeatValue(currentCountry, 'poultryConsumption', POULTRY_MEAT, age);
+    savedBovine = calculateMeatValue(currentCountry, 'bovineConsumption', BOVIE_MEAT, restAge);
+    savedPig = calculateMeatValue(currentCountry, 'pigConsumption', PIG_MEAT, restAge); 
+    savedPoultry = calculateMeatValue(currentCountry, 'poultryConsumption', POULTRY_MEAT, restAge); 
   }
 
   let cards = [
-    { icon: cowIcon, eaten: eatenBovine, canBeSaved: savedBovine},
-    { icon: pigIcon, eaten: eatenPig, canBeSaved: savedPig},
-    { icon: chickenIcon, eaten: eatenPoultry, canBeSaved: savedPoultry},
+    { icon: cowIcon, redIcon: redCowIcon, eaten: eatenBovine, canBeSaved: savedBovine },
+    { icon: pigIcon, redIcon: redPigIcon, eaten: eatenPig, canBeSaved: savedPig },
+    { icon: chickenIcon, redIcon: redChickenIcon, eaten: eatenPoultry, canBeSaved: savedPoultry },
   ];
+
+  let currentLocalization = LOCALIZATION[localization];
+  let localizationKeys = Object.keys(LOCALIZATION)
 
   let selectStyles = {
     control: (styles) => ({
       ...styles,
-      // backgroundColor: 'black',
-      border: "3px solid #92C367",
+      border: '3px solid #92C367',
+      background: 'transparent',
+      outline: 'none'
     }),
   };
 
+  const selectLang = (lang) => {
+    setLangPopup(false);
+    setLocalization(lang);
+  }
+
+  console.log(isAside)
   return (
-    <div className="App">
-      <header>
-        <div className="header_title">Vegan calculator</div>
-        <div className="header_local-button"></div>
-      </header>
+    <Media query={{ maxWidth: 567 }}>
+        {isMobile => (
+          <div className="App">
+            <div className={`aside-wrapper ${isAside ? 'aside-wrapper--visible': ''}`}>
+              <div className={`aside ${isAside ? 'aside--visible': ''}`}>
+              <span class="aside_close" onClick={() => setAside(false)}>
+	              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24">
+                  <path d="M13.4 12l5.3-5.3c.4-.4.4-1 0-1.4s-1-.4-1.4 0L12 10.6 6.7 5.3c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l5.3 5.3-5.3 5.3c-.4.4-.4 1 0 1.4.2.2.5.3.7.3s.5-.1.7-.3l5.3-5.3 5.3 5.3c.2.2.5.3.7.3s.5-.1.7-.3c.4-.4.4-1 0-1.4L13.4 12z"></path>
+                </svg>
+              </span>
+              </div>
+            </div>
+            <header>
+              {isMobile && <div onClick={() => setAside(true)} className="header_aside-button">
+                <div className="header_aside-line"></div>
+              </div>}
+              <div className="header_title">Vegan calculator</div>
+              {!isMobile && <div className="header_local-block">
+                <div
+                  className="header_local-button"
+                  onClick={() => setLangPopup(true)}
+                >
+                  {localization}
+                </div>
+                {isLangPopup && <LangPopup
+                  items={localizationKeys}
+                  onSelectLang={selectLang}
+                  active={localization}
+                />}
+              </div>}
+            </header>
 
-      <div className="filter-container">
-        <div className="input-container country-input">
-          <label>
-            <div className="input-label">Введите страну</div>
-            <Select
-              defaultValue={currentCountry}
-              onChange={setCountry}
-              options={options}
-              styles={selectStyles}
-              placeholder={"Select your country"}
-            />
-          </label>
-        </div>
-        <div className="input-container">
-          <label>
-            <div className="input-label">Введите возраст</div>
-            <input
-              className="age-input"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              type="number"
-              placeholder="Enter your age"
-            ></input>
-          </label>
-        </div>
-      <LifeExpentancy restAge={ restAge } />
-      </div>
+            <div className="filter-container">
+              <div className="input-container country-input">
+                <label>
+                  <div className="input-label">{currentLocalization.country}</div>
+                  <Select
+                    defaultValue={currentCountry}
+                    onChange={setCountry}
+                    options={options}
+                    styles={selectStyles}
+                    placeholder={currentLocalization.enterCountry}
+                  />
+                </label>
+              </div>
+              <div className="input-container input-container--age">
+                <label>
+                  <div className="input-label">{currentLocalization.age}</div>
+                  <input
+                    className="age-input"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    type="number"
+                    placeholder={currentLocalization.enterAge}
+                  ></input>
+                </label>
+              </div>
+              { !isMobile && <LifeExpentancy
+                restAge={restAge}
+                localization={currentLocalization}
+              /> }
+            </div>
+            {isMobile && (
+              <div className="life-container">
+                 <LifeExpentancy restAge={restAge} localization={currentLocalization} />
+              </div>
+            )}
 
-      <div>
-        <div>Already</div>
-        <div className="cards"> 
-          {cards && cards.map(({icon, eaten}) => <Card icon={icon} isEaten amount={eaten} />)}
-        </div>
-      </div>
-      
-      <div>
-        <div>Can be Saved</div>
-        <div className="cards"> 
-          {cards && cards.map(({icon, canBeSaved}) => <Card icon={icon} amount={canBeSaved} />)}
-        </div>
-      </div>
+            <div className="cards-container">
+              <div className="cards-rows">
+                <div className="cards-row">
+                  <div className="cards-title">
+                    {currentLocalization.alreadyEaten}
+                  </div>
+                  <div className="cards">
+                    {cards &&
+                      cards.map(({ redIcon, eaten }) => (
+                        <Card icon={redIcon} isEaten amount={eaten} />
+                      ))}
+                  </div>
+                </div>
 
-      
-    </div>
+                <div className="cards-row cards-row--right">
+                  <div className="cards-title">
+                    {currentLocalization.canBeSaved}
+                  </div>
+                  <div className="cards">
+                    {cards &&
+                      cards.map(({ icon, canBeSaved }) => (
+                        <Card icon={icon} amount={canBeSaved} />
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+       )}
+    </Media>
   );
 };
 
