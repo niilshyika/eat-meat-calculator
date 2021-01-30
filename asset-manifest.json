@@ -1,27 +1,30 @@
 {
   "files": {
-    "main.css": "/eat-meat-calculator/static/css/main.e20f920f.chunk.css",
-    "main.js": "/eat-meat-calculator/static/js/main.17f3db91.chunk.js",
-    "main.js.map": "/eat-meat-calculator/static/js/main.17f3db91.chunk.js.map",
+    "main.css": "/eat-meat-calculator/static/css/main.6aa5e834.chunk.css",
+    "main.js": "/eat-meat-calculator/static/js/main.a10f50e9.chunk.js",
+    "main.js.map": "/eat-meat-calculator/static/js/main.a10f50e9.chunk.js.map",
     "runtime-main.js": "/eat-meat-calculator/static/js/runtime-main.2e95893e.js",
     "runtime-main.js.map": "/eat-meat-calculator/static/js/runtime-main.2e95893e.js.map",
     "static/js/2.232538d1.chunk.js": "/eat-meat-calculator/static/js/2.232538d1.chunk.js",
     "static/js/2.232538d1.chunk.js.map": "/eat-meat-calculator/static/js/2.232538d1.chunk.js.map",
     "index.html": "/eat-meat-calculator/index.html",
-    "static/css/main.e20f920f.chunk.css.map": "/eat-meat-calculator/static/css/main.e20f920f.chunk.css.map",
+    "static/css/main.6aa5e834.chunk.css.map": "/eat-meat-calculator/static/css/main.6aa5e834.chunk.css.map",
     "static/js/2.232538d1.chunk.js.LICENSE.txt": "/eat-meat-calculator/static/js/2.232538d1.chunk.js.LICENSE.txt",
     "static/media/chicken-red.7718f635.svg": "/eat-meat-calculator/static/media/chicken-red.7718f635.svg",
     "static/media/chicken.1fca8c9a.svg": "/eat-meat-calculator/static/media/chicken.1fca8c9a.svg",
+    "static/media/close-icon2.13dbe740.svg": "/eat-meat-calculator/static/media/close-icon2.13dbe740.svg",
     "static/media/cow-red.cd18c7df.svg": "/eat-meat-calculator/static/media/cow-red.cd18c7df.svg",
     "static/media/cow.dd819391.svg": "/eat-meat-calculator/static/media/cow.dd819391.svg",
     "static/media/man.ae03e503.svg": "/eat-meat-calculator/static/media/man.ae03e503.svg",
     "static/media/pig-red.32804823.svg": "/eat-meat-calculator/static/media/pig-red.32804823.svg",
-    "static/media/pig.2ba3b2d3.svg": "/eat-meat-calculator/static/media/pig.2ba3b2d3.svg"
+    "static/media/pig.2ba3b2d3.svg": "/eat-meat-calculator/static/media/pig.2ba3b2d3.svg",
+    "static/media/telegram.490a0c3d.svg": "/eat-meat-calculator/static/media/telegram.490a0c3d.svg",
+    "static/media/vk.9cffc065.svg": "/eat-meat-calculator/static/media/vk.9cffc065.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.2e95893e.js",
     "static/js/2.232538d1.chunk.js",
-    "static/css/main.e20f920f.chunk.css",
-    "static/js/main.17f3db91.chunk.js"
+    "static/css/main.6aa5e834.chunk.css",
+    "static/js/main.a10f50e9.chunk.js"
   ]
 }
