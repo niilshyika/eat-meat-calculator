@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Media from "react-media";
 import Select from "react-select";
 import "./App.css";
 import Card from './components/card';
 import LifeExpentancy from './components/life-expentancy';
 import LangPopup from './components/lang-popup';
-import { round } from './utils';
+import Aside from './components/aside'
+import { round, useOutsideClick } from './utils';
 import countries from "./final.json";
 import {
   BOVIE_MEAT,
@@ -86,20 +87,20 @@ const App = () => {
     setLocalization(lang);
   }
 
-  console.log(isAside)
   return (
     <Media query={{ maxWidth: 567 }}>
         {isMobile => (
           <div className="App">
-            <div className={`aside-wrapper ${isAside ? 'aside-wrapper--visible': ''}`}>
-              <div className={`aside ${isAside ? 'aside--visible': ''}`}>
-              <span class="aside_close" onClick={() => setAside(false)}>
-	              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24">
-                  <path d="M13.4 12l5.3-5.3c.4-.4.4-1 0-1.4s-1-.4-1.4 0L12 10.6 6.7 5.3c-.4-.4-1-.4-1.4 0s-.4 1 0 1.4l5.3 5.3-5.3 5.3c-.4.4-.4 1 0 1.4.2.2.5.3.7.3s.5-.1.7-.3l5.3-5.3 5.3 5.3c.2.2.5.3.7.3s.5-.1.7-.3c.4-.4.4-1 0-1.4L13.4 12z"></path>
-                </svg>
-              </span>
-              </div>
-            </div>
+            {/* <div className={`aside-wrapper ${isAside ? 'aside-wrapper--visible': ''}`}>
+            </div> */}
+            {isMobile && <Aside
+              isVisible={isAside}
+              closeHandler={() => setAside(false)}
+              activeLang={localization}
+              langs={localizationKeys}
+              langHandler={selectLang}
+            />}
+            
             <header>
               {isMobile && <div onClick={() => setAside(true)} className="header_aside-button">
                 <div className="header_aside-line"></div>
