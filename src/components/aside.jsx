@@ -1,14 +1,9 @@
 import React, { useRef } from 'react';
 import { useOutsideClick } from '../utils';
+import ShareButtons from './share-buttons';
 import closeIcon from '../imgs/close-icon2.svg';
-import telegram from '../imgs/telegram.svg';
-import vk from '../imgs/vk.svg';
 
-const siteUrl='https://niilshyika.github.io/eat-meat-calculator/';
-const tgShareLink = `https://t.me/share/url?url=${siteUrl}`;
-const vkShareLink = `http://vk.com/share.php?url=${siteUrl}`;
-
-const Aside = ({ isVisible, closeHandler, langs, activeLang, langHandler }) => {
+const Aside = ({ isVisible, closeHandler, langs, activeLang, langHandler, shareButtons }) => {
   const asideRef = useRef();
 
   useOutsideClick(asideRef, () => {
@@ -34,16 +29,7 @@ const Aside = ({ isVisible, closeHandler, langs, activeLang, langHandler }) => {
         ))}
       </div>
 
-      <div className="aside__share-buttons">
-        <a href={tgShareLink} target="_blank">
-          <img src={telegram} />
-        </a>
-
-        <a href={vkShareLink} target="_blank">
-          <img src={vk} />
-        </a>
-      </div>
-
+      <ShareButtons items={ shareButtons } />
     </div>
   )
 }

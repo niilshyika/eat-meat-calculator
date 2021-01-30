@@ -5,6 +5,7 @@ import "./App.css";
 import Card from './components/card';
 import LifeExpentancy from './components/life-expentancy';
 import LangPopup from './components/lang-popup';
+import ShareButtons from './components/share-buttons';
 import Aside from './components/aside'
 import { round, useOutsideClick } from './utils';
 import countries from "./final.json";
@@ -20,6 +21,8 @@ import chickenIcon from "./imgs/chicken.svg";
 import redCowIcon from "./imgs/cow-red.svg";
 import redPigIcon from "./imgs/pig-red.svg";
 import redChickenIcon from "./imgs/chicken-red.svg";
+import telegram from './imgs/tg3.svg';
+import vk from './imgs/vk.svg';
 
 const options = countries.map((country) => ({
   ...country,
@@ -70,6 +73,17 @@ const App = () => {
     { icon: chickenIcon, redIcon: redChickenIcon, eaten: eatenPoultry, canBeSaved: savedPoultry },
   ];
 
+  let shareButtons = [
+    {
+      icon: telegram,
+      link: `https://t.me/share/url?url=niilshyika.github.io/eat-meat-calculator`
+    },
+    {
+      icon: vk,
+      link: `http://vk.com/share.php?url=niilshyika.github.io/eat-meat-calculator`
+    }
+  ];
+
   let currentLocalization = LOCALIZATION[localization];
   let localizationKeys = Object.keys(LOCALIZATION)
 
@@ -86,6 +100,7 @@ const App = () => {
     setLangPopup(false);
     setLocalization(lang);
   }
+  
 
   return (
     <Media query={{ maxWidth: 567 }}>
@@ -99,6 +114,7 @@ const App = () => {
               activeLang={localization}
               langs={localizationKeys}
               langHandler={selectLang}
+              shareButtons={shareButtons}
             />}
             
             <header>
@@ -106,18 +122,21 @@ const App = () => {
                 <div className="header_aside-line"></div>
               </div>}
               <div className="header_title">Vegan calculator</div>
-              {!isMobile && <div className="header_local-block">
-                <div
-                  className="header_local-button"
-                  onClick={() => setLangPopup(true)}
-                >
-                  {localization}
+              {!isMobile && <div className="header_right-block">
+                <div className="header_local-block">
+                  <div
+                    className="header_local-button"
+                    onClick={() => setLangPopup(true)}
+                  >
+                    {localization}
+                  </div>
+                  {isLangPopup && <LangPopup
+                    items={localizationKeys}
+                    onSelectLang={selectLang}
+                    active={localization}
+                  />}
                 </div>
-                {isLangPopup && <LangPopup
-                  items={localizationKeys}
-                  onSelectLang={selectLang}
-                  active={localization}
-                />}
+                <ShareButtons items={ shareButtons } />
               </div>}
             </header>
 

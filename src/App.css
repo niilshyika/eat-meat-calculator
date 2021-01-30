@@ -61,6 +61,7 @@ header {
 
 .header_local-block {
   position: relative;
+  margin-right: 32px;
 }
 
 .header_aside-button {
@@ -143,12 +144,12 @@ header {
   color: #527532;
 }
 
-.aside__share-buttons {
-  margin-top: 32px;
-}
-
 .aside__share-buttons * + *{
   padding-left: 8px;
+}
+
+.header_right-block {
+  display: flex;
 }
 
 .header_local-button {
@@ -286,6 +287,10 @@ header {
     margin-bottom: 16px;
   }
 
+  .aside__share-buttons {
+    margin-top: 32px;
+  }
+
   .life-container {
     padding: 0 16px;
     display: flex;
@@ -342,6 +347,7 @@ header {
     width: 50%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
   }
   
   .cards-row--right {

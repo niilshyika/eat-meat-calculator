@@ -1,3 +1,4 @@
+import React from 'react';
 import manIcon from "../imgs/man.svg";
 
 const LifeExpentancy = ({ restAge, localization }) => (
